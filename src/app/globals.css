@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --color-blue-50: #E6F1FE;
+  --color-blue-100: #CCE3FD;
+  --color-blue-200: #99C7FB;
+  --color-blue-300: #66AAF9;
+  --color-blue-400: #338EF7;
+  --color-blue-500: #006FEE;
+  --color-blue-600: #005BC4;
+  --color-blue-700: #004493;
+  --color-blue-800: #002E62;
+  --color-blue-900: #001731;
+  --color-blue-1000: #020f1e;
+
+  --color-zinc-50: #FAFAFA;
+  --color-zinc-100: #F4F4F5;
+  --color-zinc-200: #E4E4E7;
+  --color-zinc-300: #D4D4D8;
+  --color-zinc-400: #A1A1AA;
+  --color-zinc-500: #71717A;
+  --color-zinc-600: #52525B;
+  --color-zinc-700: #3F3F46;
+  --color-zinc-800: #27272A;
+  --color-zinc-900: #121212;
+
+  --color-primary: #ffffff;
+  --color-secondary: black;
+  --color-terniary: var(--color-blue-1000);
+
+  --color-text-primary: var(--color-terniary);
+  --color-text-secondary: var(--color-primary);
+  --color-text-terniary: var(--color-secondary);
+  --color-text-quaternary: var(--color-zinc-500);
+  --color-text-quinary: #010f1f1b;
+
+  --color-bg: var(--color-primary);
+  --color-bg-secondary: var(--color-terniary);
+  --color-bg-terniary: var(--color-zinc-50);
+  --color-bg-quaternary: var(--color-zinc-100);
+  --color-bg-quinary: var(--color-zinc-200);
+
+  --color-bg-opacy: #3f3f4686;
+
+  --color-border: var(--color-zinc-300);
+  --color-border-secondary: var(--color-zinc-400);
+  --color-border-terniary: var(--color-zinc-500);
+
+  --sidebar-width: 4em;
+  --panel-width: 27em;
+  --panel-height-mobile: auto;
+}
+
+* {
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}

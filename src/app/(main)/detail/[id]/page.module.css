@@ -1,0 +1,32 @@
+.detail_container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: inherit;
+    overflow: hidden;
+}
+
+.detail_header {
+    display: flex;
+    padding: 0.8rem 1.2rem;
+    background: var(--color-zinc-100);
+    gap: 1em;
+    align-items: center;
+}
+
+.detail_header p {
+    font-size: 1.3rem;
+    color: var(--color-zinc-800);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.detail_header a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .detail_container {
+        min-width: 100%;
+    }
+}

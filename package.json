@@ -1,0 +1,32 @@
+{
+  "name": "fe-interpoli",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@heroui/react": "^2.8.4",
+    "@react-google-maps/api": "^2.20.7",
+    "@svgr/webpack": "^8.1.0",
+    "axios": "^1.12.2",
+    "firebase": "^12.3.0",
+    "leaflet": "^1.9.4",
+    "next": "15.5.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-leaflet": "^5.0.0",
+    "sweetalert2": "^11.23.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/react": "19.1.13",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.3",
+    "tailwindcss": "^4"
+  }
+}
