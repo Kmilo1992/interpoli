@@ -6,7 +6,7 @@ import { timeAgo } from "../../../utils/timeAgo";
 import { useRouter } from "next/navigation";
 import { alertImages } from "../../../utils/alertImages";
 
-const CardAlert = ({ alert }) => {
+const Admin = ({ alert }) => {
   const router = useRouter();
 
   const {
@@ -24,7 +24,7 @@ const CardAlert = ({ alert }) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    router.push(`/detail/${alert.id}`);
+    router.push(`/admindetail/${alert.id}`);
     window.dispatchEvent(
       new CustomEvent("alert-selected", { detail: alert.id })
     );
@@ -92,4 +92,4 @@ const CardAlert = ({ alert }) => {
   );
 };
 
-export default CardAlert;
+export default Admin;
