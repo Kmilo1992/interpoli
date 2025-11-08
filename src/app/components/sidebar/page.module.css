@@ -8,6 +8,7 @@
     width: 100%;
     padding: 0.8em 0.4em;
     gap: 0.4em;
+    position: relative;
 }
 
 .sidebar_article_items {
@@ -77,6 +78,84 @@
     }
 }
 
+/* ===== Footer Info ===== */
+.sidebar_article_footer {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.info_wrap {
+    position: relative;
+}
+
+.info_trigger {
+    min-width: 2.4em;
+    min-height: 2.4em;
+    padding: 0.15em;
+    border: none;
+    border-radius: 0.3em;
+    cursor: pointer;
+    background-color: var(--color-bg-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    align-items: center;
+    justify-content: center;
+}
+
+.info_icon {
+    width: 1.2em;
+    height: 1.2em;
+    filter: invert(1);
+}
+
+.info_popover {
+    position: absolute;
+    left: calc(100% + 8px);
+    bottom: 0.1em;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-zinc-50);
+    border: 1px solid var(--color-border, rgba(255,255,255,0.15));
+    border-radius: 8px;
+    padding: 0.6em 1.8em 0.6em 0.8em; /* espacio para el logo superior derecho */
+    max-width: 22rem;
+    min-width: 18rem;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 120ms ease, transform 120ms ease;
+    z-index: 5;
+}
+
+.info_popover.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.info_text {
+    margin: 0.1em 0;
+    line-height: 1.2;
+    font-size: 0.9em;
+}
+
+.info_version {
+    font-size: 0.8em;
+}
+
+.info_brand {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    opacity: 0.95;
+}
+
 @media (max-width: 768px) {
     .sidebar_section {
         flex-direction: row;
@@ -106,5 +185,31 @@
 
     .sidebar_btn:hover {
         background-color: var(--color-bg-secondary);
+    }
+
+    /* oculta solo el footer; el popover se muestra con estilo móvil */
+    .sidebar_article_footer {
+        display: none;
+    }
+
+    .info_popover {
+        position: fixed;
+        left: 1rem; /* desplazado a la izquierda para mejor lectura */
+        right: auto;
+        transform: none;
+        bottom: calc(var(--sidebar-height, 56px) + 8px);
+        max-width: min(92vw, 26rem);
+        min-width: 18rem;
+    }
+
+    /* En móvil, el botón Info debe tener el mismo tamaño que los demás */
+    .info_trigger {
+        min-width: 3.2em;
+        min-height: 3.2em;
+        padding: 0.2em;
+    }
+    .info_icon {
+        width: 1.5em;
+        height: 1.5em;
     }
 }
