@@ -24,7 +24,7 @@ const Admin = ({ alert }) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    router.push(`/admindetail/${alert.id}`);
+    router.push(`/admin-detail/${alert.id}`);
     window.dispatchEvent(
       new CustomEvent("alert-selected", { detail: alert.id })
     );
