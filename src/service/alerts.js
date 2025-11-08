@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const alertsCollection = collection(db, "alerts");
@@ -20,4 +20,28 @@ export async function createAlert(alert) {
 
   const docRef = await addDoc(alertsCollection, newAlert);
   return docRef.id;
+}
+
+/* ✅ AGREGADO — actualizar alerta */
+export async function updateAlertInFirestore(alert) {
+  if (!alert?.id) throw new Error("Falta el id para actualizar la alerta.");
+
+  const ref = doc(db, "alerts", alert.id);
+  const { id, createdAt, ...rest } = alert; // evitar sobrescribir createdAt
+
+  await updateDoc(ref, {
+    ...rest,
+    updatedAt: new Date().toISOString(),
+  });
+
+  return true;
+}
+
+/* ✅ AGREGADO — eliminar alerta */
+export async function deleteAlertFromFirestore(id) {
+  if (!id) throw new Error("Falta el id para eliminar la alerta.");
+
+  const ref = doc(db, "alerts", id);
+  await deleteDoc(ref);
+  return true;
 }

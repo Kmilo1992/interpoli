@@ -10,6 +10,12 @@ import AdminDetail from "../../../components/admin-detail/AdminDetail.jsx";
 import LeftLine from "../../../../assets/icons/arrow-left-line.svg";
 import Spinner from "../../../components/spinner/Spinner";
 
+// ✅ IMPORTA UPDATE Y DELETE
+import {
+  updateAlertInFirestore,
+  deleteAlertFromFirestore
+} from "../../../../service/alerts";
+
 const AdminChange = () => {
   const params = useParams();
   const id = params?.id;
@@ -18,7 +24,6 @@ const AdminChange = () => {
   const [minLoading, setMinLoading] = useState(true);
 
   useEffect(() => {
-    // Delay artificial de 2 segundos
     const timer = setTimeout(() => setMinLoading(false), 500);
 
     if (id) {
@@ -63,7 +68,13 @@ const AdminChange = () => {
         </Link>
         <p>Regresar al listado de alertas</p>
       </div>
-      <AdminDetail alert={alert} />
+
+      {/* ✅ AÑADIDOS onUpdate Y onDelete */}
+      <AdminDetail 
+        alert={alert}
+        onUpdate={(data) => updateAlertInFirestore(data)}
+        onDelete={(id) => deleteAlertFromFirestore(id)}
+      />
     </div>
   );
 };
