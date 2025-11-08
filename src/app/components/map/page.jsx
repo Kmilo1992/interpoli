@@ -42,6 +42,7 @@ export default function Map() {
 
   const [map, setMap] = useState(null);
   const [alerts, setAlerts] = useState([]);
+  const [filters, setFilters] = useState({ types: [], levels: [] });
   const [center, setCenter] = useState(fallbackCenter);
   const [activeAlert, setActiveAlert] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -67,6 +68,24 @@ export default function Map() {
     window.addEventListener("alert-selected", handler);
     return () => window.removeEventListener("alert-selected", handler);
   }, [alerts, map]);
+
+  // Listen for filters from alerts panel
+  useEffect(() => {
+    const onFilters = (e) => {
+      const payload = e.detail;
+      if (payload && typeof payload === "object") {
+        const types = Array.isArray(payload.types) ? payload.types : [];
+        const levels = Array.isArray(payload.levels) ? payload.levels : [];
+        setFilters({ types, levels });
+      } else {
+        // Backward compatibility if only array is sent
+        const arr = Array.isArray(payload) ? payload : [];
+        setFilters({ types: arr, levels: [] });
+      }
+    };
+    window.addEventListener("alerts-filters-changed", onFilters);
+    return () => window.removeEventListener("alerts-filters-changed", onFilters);
+  }, []);
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -125,6 +144,18 @@ export default function Map() {
     router.push(`/detail/${alert.id}`);
   };
 
+  const visibleAlerts = React.useMemo(() => {
+    const { types, levels } = filters || {};
+    let out = alerts;
+    if (types && types.length) {
+      out = out.filter((a) => types.includes((a.category || "").toLowerCase()));
+    }
+    if (levels && levels.length) {
+      out = out.filter((a) => levels.includes(a.priority));
+    }
+    return out;
+  }, [alerts, filters]);
+
   if (loading) {
     return <Spinner />;
   }
@@ -139,7 +170,7 @@ export default function Map() {
         options={{ styles: mapStyles, streetViewControl: false }}
       >
         {/* Markers */}
-        {alerts.map((alert) =>
+        {visibleAlerts.map((alert) =>
           alert.coordinates ? (
             <Marker
               key={alert.id}
