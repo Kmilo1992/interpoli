@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./page.module.css";
-import Admin from "../../components/admin/Admin.jsx";
+import Admin from "../../components/admin/PanelAdmin.jsx";
 import { db } from "../../../service/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import Spinner from "../../components/spinner/Spinner";
