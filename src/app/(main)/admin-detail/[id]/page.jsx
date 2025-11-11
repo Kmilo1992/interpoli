@@ -10,7 +10,6 @@ import AdminDetail from "../../../components/admin-detail/AdminDetail.jsx";
 import LeftLine from "../../../../assets/icons/arrow-left-line.svg";
 import Spinner from "../../../components/spinner/Spinner";
 
-// ✅ IMPORTA UPDATE Y DELETE
 import {
   updateAlertInFirestore,
   deleteAlertFromFirestore
@@ -69,7 +68,6 @@ const AdminChange = () => {
         <p>Regresar al listado de alertas</p>
       </div>
 
-      {/* ✅ AÑADIDOS onUpdate Y onDelete */}
       <AdminDetail 
         alert={alert}
         onUpdate={(data) => updateAlertInFirestore(data)}

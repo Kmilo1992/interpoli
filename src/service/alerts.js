@@ -22,7 +22,6 @@ export async function createAlert(alert) {
   return docRef.id;
 }
 
-/* ✅ AGREGADO — actualizar alerta */
 export async function updateAlertInFirestore(alert) {
   if (!alert?.id) throw new Error("Falta el id para actualizar la alerta.");
 
@@ -37,7 +36,6 @@ export async function updateAlertInFirestore(alert) {
   return true;
 }
 
-/* ✅ AGREGADO — eliminar alerta */
 export async function deleteAlertFromFirestore(id) {
   if (!id) throw new Error("Falta el id para eliminar la alerta.");
 
