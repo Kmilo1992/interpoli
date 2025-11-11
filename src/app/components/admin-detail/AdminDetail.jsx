@@ -1,17 +1,22 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { alertImages } from "../../../utils/alertImages";
 import { alertTypeOptions, getDescriptionsForType } from "../../data/alertType";
 import { level as levelOptions } from "../../data/alertLevel";
 import { Toast } from "../../../utils/toast";
+import Swal from "sweetalert2";
+
 
 const AdminDetail = ({ alert, onUpdate, onDelete }) => {
   const [category, setCategory] = useState(alert.category || "");
   const [description, setDescription] = useState(alert.description || "");
   const [otherText, setOtherText] = useState("");
   const [priority, setPriority] = useState(alert.priority || "");
+
+  const router = useRouter();
 
   // Detectar cuando era un texto personalizado
   useEffect(() => {
@@ -50,11 +55,32 @@ const AdminDetail = ({ alert, onUpdate, onDelete }) => {
     });
   };
 
-  const handleDelete = () => {
-    if (!confirm("¿Seguro deseas eliminar esta alerta?")) return;
+const handleDelete = () => {
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "No podrás revertir esto.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+    customClass: {
+    icon: 'my-red-icon'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (onDelete) onDelete(alert.id);
 
-    if (onDelete) onDelete(alert.id);
-  };
+      router.push("/admin");
+
+      Toast.fire({
+        icon: "success",
+        title: "Alerta eliminada.",
+      });
+    }
+  });
+};
 
   const imageSrc =
     alert.mapImage ||

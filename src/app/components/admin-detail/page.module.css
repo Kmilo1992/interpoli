@@ -204,6 +204,11 @@
   border: 2px solid var(--color-bg-secondary);
 }
 
+.my-red-icon {
+  border-color: red !important;
+  color: red !important;
+}
+
 @media (max-width: 768px) {
     .scrollShadow {
         min-width: 100%;
