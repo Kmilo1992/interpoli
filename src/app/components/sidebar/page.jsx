@@ -10,6 +10,7 @@ import MageFilter from "../../../assets/icons/mage-filter.svg";
 import Image from "next/image";
 import infoIcon from "../../../assets/icons/info.png";
 import logoAnglo from "../../../assets/icons/logo_anglo.png";
+import Logo from "../../../assets/icons/logo.png";
 import Police from "../../../assets/icons/police.svg";
 
 const Sidebar = () => {
@@ -70,7 +71,14 @@ const Sidebar = () => {
     <section className={styles.sidebar_section}>
       <article className={styles.sidebar_article_header}>
         <Button className={styles.sidebar_logo} as={Link} href={"/"}>
-          <Reference className={styles.logo} />
+          <Image 
+            src={Logo} 
+            alt="Logo" 
+            className={styles.logo} 
+            width={120} 
+            height={40} 
+            priority 
+          />
         </Button>
       </article>
       <hr aria-orientation="horizontal" className={styles.hr_line} />
@@ -116,10 +124,12 @@ const Sidebar = () => {
               <p className={`${styles.info_text} ${styles.info_version}`}>Versión: v0.0.2 (Beta)</p>
               <p className={styles.info_text}>Creado por:</p>
               <p className={styles.info_text}>Colegio Anglo Americano:</p>
-              <p className={styles.info_text}>
-                Jerónimo Clavijo, Santiago Hernández, Paula Solano, Mariana Castro,
-                Nicolás Rojas & Juan Camilo Luis Gonzalez
-              </p>
+              <p className={styles.info_text}>&emsp;Jerónimo Clavijo</p>
+              <p className={styles.info_text}>&emsp;Santiago Hernández</p>
+              <p className={styles.info_text}>&emsp;Paula Solano</p>
+              <p className={styles.info_text}>&emsp;Mariana Castro</p>
+              <p className={styles.info_text}>&emsp;Nicolás Rojas</p>
+              <p className={styles.info_text}>&emsp;Juan Camilo Luis Gonzalez</p>
             </div>
           </div>
         )}
@@ -155,10 +165,12 @@ const Sidebar = () => {
               <p className={`${styles.info_text} ${styles.info_version}`}>Versión: v0.0.2 (Beta)</p>
               <p className={styles.info_text}>Creado por:</p>
               <p className={styles.info_text}>Colegio Anglo Americano:</p>
-              <p className={styles.info_text}>
-                Jerónimo Clavijo, Santiago Hernández, Paula Solano, Mariana Castro,
-                Nicolás Rojas & Juan Camilo Luis Gonzalez
-              </p>
+              <p className={styles.info_text}>&emsp;Jerónimo Clavijo</p>
+              <p className={styles.info_text}>&emsp;Santiago Hernández</p>
+              <p className={styles.info_text}>&emsp;Paula Solano</p>
+              <p className={styles.info_text}>&emsp;Mariana Castro</p>
+              <p className={styles.info_text}>&emsp;Nicolás Rojas</p>
+              <p className={styles.info_text}>&emsp;Juan Camilo Luis Gonzalez</p>
             </div>
           </div>
         </div>
