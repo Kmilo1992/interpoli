@@ -11,6 +11,7 @@ import Image from "next/image";
 import infoIcon from "../../../assets/icons/info.png";
 import logoAnglo from "../../../assets/icons/logo_anglo.png";
 import Logo from "../../../assets/icons/logo.png";
+import Police from "../../../assets/icons/police.svg";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const Sidebar = () => {
     { id: 1, icon: Reference, name: "Alerts", path: "/alerts" },
     { id: 2, icon: Earth, name: "Map", path: "/" },
     { id: 3, icon: MageFilter, name: "Report", path: "/add-alert" },
+    { id: 4, icon: Police, name: "Poliadmin", path: "/poliadmin" },
   ];
 
   useEffect(() => {
