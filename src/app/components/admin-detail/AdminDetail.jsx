@@ -46,13 +46,25 @@ const AdminDetail = ({ alert, onUpdate, onDelete }) => {
       description: finalDescription,
       priority,
     };
+    
+    Swal.fire({
+    title: "¿Estás seguro?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, editar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+        if (onUpdate) onUpdate(updatedAlert);
 
-    if (onUpdate) onUpdate(updatedAlert);
-
-    Toast.fire({
-      icon: "success",
-      title: "Cambios guardados.",
-    });
+        Toast.fire({
+          icon: "success",
+          title: "Alerta editada.",
+        });
+      }
+   });
   };
 
 const handleDelete = () => {
@@ -65,9 +77,6 @@ const handleDelete = () => {
     cancelButtonColor: "#d33",
     confirmButtonText: "Sí, eliminar",
     cancelButtonText: "Cancelar",
-    customClass: {
-    icon: 'my-red-icon'
-    }
   }).then((result) => {
     if (result.isConfirmed) {
       if (onDelete) onDelete(alert.id);
