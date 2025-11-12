@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Inter Poli",
+  title: "InterPoli",
   description: "Project Inter Poli",
 };
 
