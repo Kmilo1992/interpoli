@@ -42,6 +42,35 @@ const MainLayout = ({ children }) => {
         prevAlertsRef.current = allAlerts;
         initializedRef.current = true;
       } else if (addedAlerts.length > 0) {
+        // Mostrar toast para cada nueva alerta
+        addedAlerts.forEach((alert) => {
+          toast((t) => (
+            <div
+              onClick={() => {
+                toast.dismiss(t.id);
+                router.push(`/detail/${alert.id}`);
+              }}
+              style={{
+                cursor: "pointer",
+                color: "#fff",
+                background: "#1e293b",
+                borderRadius: "8px",
+                padding: "10px",
+              }}
+            >
+              <strong>🚨 Nueva alerta:</strong> {alert.category || "Sin categoría"}
+              <br />
+              <strong>🌎 Ciudad:</strong> {alert.city || "Sin ubicación"}
+              <br />
+              <strong>📍 Lugar:</strong> {alert.neighborhood || "Sin ubicación"}
+              <br />
+              <small>Clic para ver</small>
+            </div>
+          ), {
+            duration: 4000,
+          });
+        });
+
         // Ya no mostramos el toast de "Haz clic para verla".
         // Solo actualizamos el registro local de alertas conocidas.
         prevAlertsRef.current = [...prevAlertsRef.current, ...addedAlerts];
