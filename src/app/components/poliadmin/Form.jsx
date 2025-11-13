@@ -6,12 +6,13 @@ import { ScrollShadow } from "@heroui/react";
 import Spinner from "../../components/spinner/Spinner";
 import { Toast } from "../../../utils/toast";
 import { useRouter } from "next/navigation";
+import { db } from "../../../service/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const Form = () => {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -19,25 +20,34 @@ const Form = () => {
     setLoading(true);
 
     try {
-      if (user === "admin" && pass === "1234") {
-        Toast.fire({
-          icon: "success",
-          title: "Inicio de sesión exitoso",
-        });
+      const q = query(collection(db, "users"), where("username", "==", user));
+      const snap = await getDocs(q);
 
-        router.push("/admin");
-      } else {
-        Toast.fire({
-          icon: "error",
-          title: "Usuario o contraseña incorrectos",
-        });
+      if (snap.empty) {
+        Toast.fire({ icon: "error", title: "Usuario no encontrado" });
+        setLoading(false);
+        return;
       }
-    } catch (err) {
-      console.error(err);
-      Toast.fire({
-        icon: "error",
-        title: "Ocurrió un error. Intenta de nuevo.",
-      });
+
+      const userData = snap.docs[0].data();
+
+      //  Comparar contraseña
+      if (userData.password !== pass) {
+        Toast.fire({ icon: "error", title: "Contraseña incorrecta" });
+        setLoading(false);
+        return;
+      }
+
+      // Crear cookie de sesión
+      document.cookie = "session=true; path=/; max-age=900; SameSite=Lax";
+
+
+      Toast.fire({ icon: "success", title: "Inicio de sesión exitoso" });
+      router.push("/admin");
+
+    } catch (error) {
+      console.error(error);
+      Toast.fire({ icon: "error", title: "Error al iniciar sesión" });
     } finally {
       setLoading(false);
     }
@@ -47,7 +57,6 @@ const Form = () => {
     <ScrollShadow className={styles.scrollShadow}>
       <form onSubmit={handleSubmit} className={styles.form}>
         
-        {/* Usuario */}
         <div className={styles.form_group}>
           <label htmlFor="user">Usuario *</label>
           <input
@@ -55,12 +64,11 @@ const Form = () => {
             type="text"
             value={user}
             onChange={(e) => setUser(e.target.value)}
-            placeholder="Ingresa tu usuario"
+            placeholder="Nombre de usuario"
             required
           />
         </div>
 
-        {/* Contraseña */}
         <div className={styles.form_group}>
           <label htmlFor="pass">Contraseña *</label>
           <input
@@ -68,12 +76,11 @@ const Form = () => {
             type="password"
             value={pass}
             onChange={(e) => setPass(e.target.value)}
-            placeholder="Ingresa tu contraseña"
+            placeholder="Contraseña"
             required
           />
         </div>
 
-        {/* Submit */}
         <div className={styles.form_actions}>
           <button
             type="submit"
