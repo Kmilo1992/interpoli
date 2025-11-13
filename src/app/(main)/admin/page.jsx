@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 import Admin from "../../components/admin/PanelAdmin.jsx";
 import { db } from "../../../service/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
@@ -18,9 +19,16 @@ const Adminlist = () => {
   const [selectedLevels, setSelectedLevels] = useState([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filterWrapRef = useRef(null);
+  const router = useRouter();
+
+
 
   useEffect(() => {
     const q = query(collection(db, "alerts"), orderBy("createdAt", "desc"));
+    const hasSession = document.cookie.includes("session=true");
+    if (!hasSession) {
+      router.push("/poliadmin");
+    }
 
     const unsubscribe = onSnapshot(
       q,
@@ -124,6 +132,15 @@ const Adminlist = () => {
         <>
           <div className={styles.topbar}>
             <div className={styles.topbar_actions}>
+             <div className="container">
+              <button 
+                type="button"
+                className={styles.logout_button}
+                onClick={logout}
+                >
+                Cerrar sesión
+              </button>
+            </div>
               {(selectedTypes.length > 0 || selectedLevels.length > 0) && (
                 <button
                   type="button"
