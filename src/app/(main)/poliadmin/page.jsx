@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./page.module.css";
 import Form from "../../components/poliadmin/Form";
+import Link from "next/link";
 
 const Adminlogin = () => {
   return (
@@ -14,6 +15,10 @@ const Adminlogin = () => {
         </p>
       </div>
       <Form />
+      <div style={{ padding: "0.6rem 1rem" }}>
+        <p style={{ margin: 0, color: "var(--color-zinc-700)" }}>¿No tienes cuenta?</p>
+        <Link href="/signup" style={{ color: "#2563eb", fontWeight: 700 }}>Crear cuenta</Link>
+      </div>
     </div>
   );
 };

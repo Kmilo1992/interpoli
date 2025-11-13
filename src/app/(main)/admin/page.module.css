@@ -1,6 +1,7 @@
 .scroll_container {
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden; /* evita desplazamiento lateral del header en móvil */
 }
 
 /* contenedor centrado para el spinner */
@@ -47,6 +48,21 @@
 .filter_button {
   border: 1px solid var(--color-border-secondary, #e6e9ee);
   background: var(--card-bg, #ffffff);
+  padding: 0.35em 0.7em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.filter_button:hover { filter: brightness(1.05); }
+
+.container {
+  display: flex;
+  justify-content: flex-start; 
+}
+
+.logout_button {
+  border: 1px solid var(--color-border-secondary, #d33);
+  background: var(--card-bg, #d33);
   padding: 0.35em 0.7em;
   border-radius: 6px;
   cursor: pointer;
@@ -150,6 +166,7 @@
   border-radius: 6px;
   cursor: pointer;
 }
+.clear_button:hover { text-decoration: underline; }
 
 @media (max-width: 768px) {
   .scroll_container {
@@ -159,6 +176,10 @@
   .container_cards {
     flex-direction: row;
     padding: 0.6em 0em;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
   }
 
   /* En mobile, desplegar el menú hacia arriba */

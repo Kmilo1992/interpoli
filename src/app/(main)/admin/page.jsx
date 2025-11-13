@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 import Admin from "../../components/admin/PanelAdmin.jsx";
 import { db } from "../../../service/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
@@ -9,6 +10,7 @@ import Spinner from "../../components/spinner/Spinner";
 import { alertTypeOptions } from "../../data/alertType";
 import Image from "next/image";
 import filterIcon from "../../../assets/icons/filter_alerts.png";
+import { clearSession } from "../../../utils/session";
 
 const Adminlist = () => {
   const containerRef = useRef(null);
@@ -18,6 +20,9 @@ const Adminlist = () => {
   const [selectedLevels, setSelectedLevels] = useState([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filterWrapRef = useRef(null);
+  const router = useRouter();
+
+
 
   useEffect(() => {
     const q = query(collection(db, "alerts"), orderBy("createdAt", "desc"));
@@ -109,6 +114,16 @@ const Adminlist = () => {
     };
   }, [filtersOpen]);
 
+  const logout = () => {
+    try {
+      clearSession();
+    } catch {}
+    try {
+      document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    } catch {}
+    router.push("/");
+  };
+
   return (
     <div
       className={styles.scroll_container}
@@ -124,6 +139,15 @@ const Adminlist = () => {
         <>
           <div className={styles.topbar}>
             <div className={styles.topbar_actions}>
+             <div className="container">
+              <button 
+                type="button"
+                className={styles.logout_button}
+                onClick={logout}
+                >
+                Cerrar sesión
+              </button>
+            </div>
               {(selectedTypes.length > 0 || selectedLevels.length > 0) && (
                 <button
                   type="button"

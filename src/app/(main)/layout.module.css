@@ -90,5 +90,6 @@
     height: var(--panel-height-mobile);
     max-height: calc(100dvh - var(--sidebar-height, 56px));
     overflow-y: auto;
+    overflow-x: hidden; /* evita que el header/filtros se desplacen horizontalmente */
   }
 }

@@ -12,6 +12,7 @@
     background: var(--color-zinc-100);
     gap: 1em;
     align-items: center;
+    justify-content: space-between;
 }
 
 .detail_header p {
@@ -24,6 +25,16 @@
 .detail_header a:hover {
     text-decoration: underline;
 }
+
+.edit_btn {
+    border: 1px solid var(--color-border);
+    background: var(--color-primary);
+    color: var(--color-text-primary);
+    border-radius: 0.4rem;
+    padding: 0.35rem 0.8rem;
+    font-weight: 700;
+}
+.edit_btn:hover { outline: 2px solid var(--color-bg-secondary); }
 
 @media (max-width: 768px) {
     .detail_container {

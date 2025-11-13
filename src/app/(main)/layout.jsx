@@ -71,6 +71,8 @@ const MainLayout = ({ children }) => {
           });
         });
 
+        // Ya no mostramos el toast de "Haz clic para verla".
+        // Solo actualizamos el registro local de alertas conocidas.
         prevAlertsRef.current = [...prevAlertsRef.current, ...addedAlerts];
       }
     });

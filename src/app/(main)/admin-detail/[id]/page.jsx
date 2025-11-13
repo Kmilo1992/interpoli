@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../../../service/firebase";
 import styles from "./page.module.css";
 import Link from "next/link";
 import AdminDetail from "../../../components/admin-detail/AdminDetail.jsx";
+import AdminReadOnly from "../../../components/admin-detail/AdminReadOnly.jsx";
+import { getSession } from "../../../../utils/session";
 import LeftLine from "../../../../assets/icons/arrow-left-line.svg";
 import Spinner from "../../../components/spinner/Spinner";
 
@@ -18,9 +20,13 @@ import {
 const AdminChange = () => {
   const params = useParams();
   const id = params?.id;
+  const searchParams = useSearchParams();
+  const isEdit = (searchParams?.get("edit") ?? "").toString() !== "";
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(true);
   const [minLoading, setMinLoading] = useState(true);
+  const router = useRouter();
+  const session = useMemo(() => getSession(), []);
 
   useEffect(() => {
     const timer = setTimeout(() => setMinLoading(false), 500);
@@ -59,6 +65,12 @@ const AdminChange = () => {
 
   if (!alert) return <div style={{ padding: 16 }}>Alerta no encontrada.</div>;
 
+  const isOwner = session && alert && (
+    (alert.createdByUid && alert.createdByUid === session.uid) ||
+    (alert.createdByUsername && alert.createdByUsername === session.username)
+  );
+  const canEdit = (session?.isAdmin === true) || isOwner;
+
   return (
     <div className={styles.detail_container}>
       <div className={styles.detail_header}>
@@ -66,13 +78,25 @@ const AdminChange = () => {
           <LeftLine width={24} height={24} />
         </Link>
         <p>Regresar al listado de alertas</p>
+        {!isEdit && canEdit && (
+          <button
+            className={styles.edit_btn}
+            onClick={() => router.push(`/admin-detail/${id}?edit=1`)}
+          >
+            Editar
+          </button>
+        )}
       </div>
 
-      <AdminDetail 
-        alert={alert}
-        onUpdate={(data) => updateAlertInFirestore(data)}
-        onDelete={(id) => deleteAlertFromFirestore(id)}
-      />
+      {isEdit && canEdit ? (
+        <AdminDetail 
+          alert={alert}
+          onUpdate={(data) => updateAlertInFirestore(data)}
+          onDelete={(id) => deleteAlertFromFirestore(id)}
+        />
+      ) : (
+        <AdminReadOnly alert={alert} />
+      )}
     </div>
   );
 };

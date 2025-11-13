@@ -39,6 +39,7 @@ const CardAlert = ({ alert }) => {
 
   // Buscar imagen por categoría
   const alertImage = category ? alertImages[category.toLowerCase()] : null;
+  const creator = alert.createdByName || alert.reporterName || alert.createdByUsername || null;
 
   return (
     <article className={styles.card_link} onClick={handleClick}>
@@ -75,6 +76,9 @@ const CardAlert = ({ alert }) => {
               {neighborhood || "Ubicación no especificada"}
             </span>
           </p>
+          {creator && (
+            <p className={styles.created_by}>Creada por: {creator}</p>
+          )}
         </div>
         <div className={styles.card_info}>
           <div
