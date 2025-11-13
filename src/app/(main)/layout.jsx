@@ -60,10 +60,14 @@ const MainLayout = ({ children }) => {
             >
               <strong>🚨 Nueva alerta:</strong> {alert.category || "Sin categoría"}
               <br />
-              <small>Haz clic para verla</small>
+              <strong>🌎 Ciudad:</strong> {alert.city || "Sin ubicación"}
+              <br />
+              <strong>📍 Lugar:</strong> {alert.neighborhood || "Sin ubicación"}
+              <br />
+              <small>Clic para ver</small>
             </div>
           ), {
-            duration: 5000,
+            duration: 4000,
           });
         });
 
