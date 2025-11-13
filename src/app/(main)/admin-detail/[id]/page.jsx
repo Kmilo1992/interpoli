@@ -30,10 +30,6 @@ const AdminChange = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => setMinLoading(false), 500);
-    const hasSession = document.cookie.includes("session=true");
-    if (!hasSession) {
-      router.push("/poliadmin");
-    }
 
     if (id) {
       const docRef = doc(db, "alerts", id);

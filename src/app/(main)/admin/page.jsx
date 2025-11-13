@@ -26,10 +26,6 @@ const Adminlist = () => {
 
   useEffect(() => {
     const q = query(collection(db, "alerts"), orderBy("createdAt", "desc"));
-    const hasSession = document.cookie.includes("session=true");
-    if (!hasSession) {
-      router.push("/poliadmin");
-    }
 
     const unsubscribe = onSnapshot(
       q,
