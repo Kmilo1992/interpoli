@@ -179,31 +179,37 @@ export default function Map() {
                 lng: alert.coordinates.lng,
               }}
               onClick={() => handleMarkerClick(alert)}
-              icon={
-                typeof window !== "undefined" && window.google
-                  ? {
-                      path: window.google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                      fillColor: priorityColors[alert.priority] || "gray",
-                      fillOpacity: 1,
-                      strokeWeight: 1,
-                      scale: 6,
-                    }
-                  : undefined
-              }
+              icon={(() => {
+                if (typeof window === "undefined") return undefined;
+                const arrow = window.google?.maps?.SymbolPath?.BACKWARD_CLOSED_ARROW;
+                if (!arrow) return undefined;
+                return {
+                  path: arrow,
+                  fillColor: priorityColors[alert.priority] || "gray",
+                  fillOpacity: 1,
+                  strokeWeight: 1,
+                  scale: 6,
+                };
+              })()}
             />
           ) : null
         )}
         {center && (
           <Marker
             position={center}
-            icon={{
-              path: window.google?.maps.SymbolPath.CIRCLE,
-              scale: 8,
-              fillColor: "#4285F4",
-              fillOpacity: 1,
-              strokeColor: "white",
-              strokeWeight: 2,
-            }}
+            icon={(() => {
+              if (typeof window === "undefined") return undefined;
+              const circle = window.google?.maps?.SymbolPath?.CIRCLE;
+              if (!circle) return undefined;
+              return {
+                path: circle,
+                scale: 8,
+                fillColor: "#4285F4",
+                fillOpacity: 1,
+                strokeColor: "white",
+                strokeWeight: 2,
+              };
+            })()}
           />
         )}
       </GoogleMap>

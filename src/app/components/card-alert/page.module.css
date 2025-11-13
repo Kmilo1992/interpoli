@@ -159,6 +159,13 @@
   color: var(--color-text-quaternary) !important;
 }
 
+/* creada por */
+.created_by {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
 @media (max-width: 768px) {
   .card_container {
     width: 26em;

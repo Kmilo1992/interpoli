@@ -59,6 +59,15 @@
     gap: 0.2em;
 }
 
+/* Hover states */
+.sidebar_btn:hover {
+    background-color: rgba(255,255,255,0.06);
+}
+.sidebar_btn:hover .icons,
+.sidebar_btn:hover .text_name_btn {
+    color: orange;
+}
+
 .text_name_btn {
     display: block;
     font-size: 0.7em !important;
@@ -83,7 +92,9 @@
     margin-top: auto;
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: center;
 }
 
 .info_wrap {
@@ -103,6 +114,10 @@
     gap: 0.2em;
     align-items: center;
     justify-content: center;
+}
+
+.info_trigger:hover {
+    background-color: rgba(255,255,255,0.06);
 }
 
 .info_icon {

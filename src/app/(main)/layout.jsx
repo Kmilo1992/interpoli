@@ -42,31 +42,8 @@ const MainLayout = ({ children }) => {
         prevAlertsRef.current = allAlerts;
         initializedRef.current = true;
       } else if (addedAlerts.length > 0) {
-        // Mostrar toast para cada nueva alerta
-        addedAlerts.forEach((alert) => {
-          toast((t) => (
-            <div
-              onClick={() => {
-                toast.dismiss(t.id);
-                router.push(`/detail/${alert.id}`);
-              }}
-              style={{
-                cursor: "pointer",
-                color: "#fff",
-                background: "#1e293b",
-                borderRadius: "8px",
-                padding: "10px",
-              }}
-            >
-              <strong>🚨 Nueva alerta:</strong> {alert.category || "Sin categoría"}
-              <br />
-              <small>Haz clic para verla</small>
-            </div>
-          ), {
-            duration: 5000,
-          });
-        });
-
+        // Ya no mostramos el toast de "Haz clic para verla".
+        // Solo actualizamos el registro local de alertas conocidas.
         prevAlertsRef.current = [...prevAlertsRef.current, ...addedAlerts];
       }
     });

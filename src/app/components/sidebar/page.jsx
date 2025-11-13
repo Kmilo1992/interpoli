@@ -12,6 +12,10 @@ import infoIcon from "../../../assets/icons/info.png";
 import logoAnglo from "../../../assets/icons/logo_anglo.png";
 import Logo from "../../../assets/icons/logo.png";
 import Police from "../../../assets/icons/police.svg";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../../../service/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { getSession } from "../../../utils/session";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -19,13 +23,96 @@ const Sidebar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const infoRef = useRef(null);
+  const [authLabel, setAuthLabel] = useState("Iniciar Sesión");
+  const [authPath, setAuthPath] = useState("/poliadmin");
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const placement = [
+  const basePlacement = [
     { id: 1, icon: Reference, name: "Alerts", path: "/alerts" },
     { id: 2, icon: Earth, name: "Map", path: "/" },
     { id: 3, icon: MageFilter, name: "Report", path: "/add-alert" },
-    { id: 4, icon: Police, name: "Poliadmin", path: "/poliadmin" },
   ];
+
+  // Auth/session state for label and destination path
+  useEffect(() => {
+    const applyFromSession = () => {
+      try {
+        const s = getSession();
+        if (s && typeof s.isAdmin === "boolean") {
+          setIsAdmin(s.isAdmin);
+          setAuthLabel(s.isAdmin ? "Admin" : "User");
+          // El botón de cuenta siempre lleva al perfil
+          setAuthPath("/account");
+          return true;
+        }
+      } catch {}
+      return false;
+    };
+
+    const updateFromAuthUser = async (user) => {
+      if (!user) {
+        setIsAdmin(false);
+        setAuthLabel("Iniciar Sesión");
+        setAuthPath("/poliadmin");
+        return;
+      }
+      try {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        const roleAdmin = !!(snap.exists() && snap.data()?.isAdmin === true);
+        setIsAdmin(roleAdmin);
+        setAuthLabel(roleAdmin ? "Admin" : "User");
+        setAuthPath("/account");
+      } catch (e) {
+        console.error("Error leyendo rol de usuario:", e);
+        setIsAdmin(false);
+        setAuthLabel("Iniciar Sesión");
+        setAuthPath("/poliadmin");
+      }
+    };
+
+    const refreshNow = () => {
+      // 1) intenta con sesión local
+      if (applyFromSession()) return;
+      // 2) intenta con auth actual
+      const u = auth?.currentUser || null;
+      if (u) {
+        updateFromAuthUser(u);
+      } else {
+        // 3) invitado
+        setIsAdmin(false);
+        setAuthLabel("Iniciar Sesión");
+        setAuthPath("/poliadmin");
+      }
+    };
+
+    // Try from local session first
+    refreshNow();
+
+    const unsubAuth = onAuthStateChanged(auth, async (user) => {
+      // If session exists, it will override
+      if (applyFromSession()) return;
+      updateFromAuthUser(user);
+    });
+
+    const onSessionChanged = () => {
+      const has = applyFromSession();
+      if (!has) {
+        // Forzar modo invitado inmediatamente al limpiar la sesión
+        setIsAdmin(false);
+        setAuthLabel("Iniciar Sesión");
+        setAuthPath("/poliadmin");
+      }
+    };
+    window.addEventListener("session-changed", onSessionChanged);
+    window.addEventListener("storage", onSessionChanged);
+
+    return () => {
+      unsubAuth();
+      window.removeEventListener("session-changed", onSessionChanged);
+      window.removeEventListener("storage", onSessionChanged);
+    };
+  }, []);
 
   useEffect(() => {
     const checkSize = () => setIsMobile(window.innerWidth <= 768);
@@ -63,9 +150,10 @@ const Sidebar = () => {
     }
   };
 
+  const authItem = { id: "auth", icon: Police, name: authLabel, path: authPath };
   const itemsToShow = isMobile
-    ? placement
-    : placement.filter((item) => item.name !== "Map");
+    ? [...basePlacement, authItem]
+    : basePlacement.filter((item) => item.name !== "Map");
 
   return (
     <section className={styles.sidebar_section}>
@@ -136,6 +224,15 @@ const Sidebar = () => {
       </article>
       {!isMobile && (
         <div className={styles.sidebar_article_footer}>
+          {/* Auth/Admin button above Info on desktop */}
+          <Button
+            className={styles.sidebar_btn}
+            onPress={() => handleNavigation(authItem.path)}
+          >
+            <authItem.icon className={styles.icons} />
+            <p className={styles.text_name_btn}>{authItem.name}</p>
+          </Button>
+
           <div
             className={styles.info_wrap}
             ref={infoRef}

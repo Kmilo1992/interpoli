@@ -9,6 +9,7 @@ import { createAlert } from "../../../service/alerts";
 import Spinner from "../../components/spinner/Spinner";
 import { Toast } from "../../../utils/toast";
 import { useRouter } from "next/navigation";
+import { getSession } from "../../../utils/session";
 
 const Form = ({ onAlertCreated }) => {
   const [category, setCategory] = useState("");
@@ -18,6 +19,7 @@ const Form = ({ onAlertCreated }) => {
   const [address, setAddress] = useState("");
   const [coords, setCoords] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [reporterName, setReporterName] = useState("");
 
   const router = useRouter();
 
@@ -93,6 +95,13 @@ const Form = ({ onAlertCreated }) => {
         geo.lat && geo.lng ? { lat: geo.lat, lng: geo.lng } : coords;
       const finalAddress = geo.formattedAddress || address;
 
+      const session = getSession();
+      const effectiveName = session?.name || session?.username || reporterName.trim();
+      if (!session && !effectiveName) {
+        Toast.fire({ icon: "error", title: "Ingresa tu nombre" });
+        setLoading(false);
+        return;
+      }
       const alertObj = {
         category: category || null,
         description: finalDescription || null,
@@ -107,6 +116,10 @@ const Form = ({ onAlertCreated }) => {
         placeId: geo.placeId || null,
         coordinates: finalCoords || null,
         createdAt: new Date().toISOString(),
+        createdByUid: session?.uid || null,
+        createdByUsername: session?.username || null,
+        createdByName: session ? (session.name || session.username) : null,
+        reporterName: !session ? effectiveName : null,
       };
 
       const newId = await createAlert(alertObj);
@@ -128,6 +141,7 @@ const Form = ({ onAlertCreated }) => {
       setPriority("");
       setAddress("");
       setCoords(null);
+      setReporterName("");
     } catch (err) {
       console.error(err);
       Toast.fire({
@@ -142,6 +156,20 @@ const Form = ({ onAlertCreated }) => {
   return (
     <ScrollShadow className={styles.scrollShadow}>
       <form onSubmit={handleSubmit} className={styles.form}>
+        {/* Nombre del reportante cuando no hay sesión */}
+        {!getSession() && (
+          <div className={styles.form_group}>
+            <label htmlFor="reporterName">Tu nombre *</label>
+            <input
+              id="reporterName"
+              type="text"
+              value={reporterName}
+              onChange={(e) => setReporterName(e.target.value)}
+              placeholder="Nombre y apellido"
+              required
+            />
+          </div>
+        )}
         {/* Categoría */}
         <div className={styles.form_group}>
           <label htmlFor="category">Categoría *</label>
