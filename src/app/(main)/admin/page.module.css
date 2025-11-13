@@ -55,6 +55,20 @@
 }
 .filter_button:hover { filter: brightness(1.05); }
 
+.container {
+  display: flex;
+  justify-content: flex-start; 
+}
+
+.logout_button {
+  border: 1px solid var(--color-border-secondary, #d33);
+  background: var(--card-bg, #d33);
+  padding: 0.35em 0.7em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
 .filter_wrap {
   position: relative;
 }

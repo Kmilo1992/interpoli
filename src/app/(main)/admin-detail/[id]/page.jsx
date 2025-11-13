@@ -11,6 +11,7 @@ import AdminReadOnly from "../../../components/admin-detail/AdminReadOnly.jsx";
 import { getSession } from "../../../../utils/session";
 import LeftLine from "../../../../assets/icons/arrow-left-line.svg";
 import Spinner from "../../../components/spinner/Spinner";
+import { useRouter } from "next/navigation";
 
 import {
   updateAlertInFirestore,
@@ -26,10 +27,17 @@ const AdminChange = () => {
   const [loading, setLoading] = useState(true);
   const [minLoading, setMinLoading] = useState(true);
   const router = useRouter();
+<<<<<<< HEAD
   const session = useMemo(() => getSession(), []);
+=======
+>>>>>>> 40d168d5319af74bd0fb7117e17431694406cbbe
 
   useEffect(() => {
     const timer = setTimeout(() => setMinLoading(false), 500);
+    const hasSession = document.cookie.includes("session=true");
+    if (!hasSession) {
+      router.push("/poliadmin");
+    }
 
     if (id) {
       const docRef = doc(db, "alerts", id);
