@@ -10,6 +10,7 @@ import Spinner from "../../components/spinner/Spinner";
 import { alertTypeOptions } from "../../data/alertType";
 import Image from "next/image";
 import filterIcon from "../../../assets/icons/filter_alerts.png";
+import { clearSession } from "../../../utils/session";
 
 const Adminlist = () => {
   const containerRef = useRef(null);
@@ -116,6 +117,16 @@ const Adminlist = () => {
       document.removeEventListener("keydown", handleKey, true);
     };
   }, [filtersOpen]);
+
+  const logout = () => {
+    try {
+      clearSession();
+    } catch {}
+    try {
+      document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    } catch {}
+    router.push("/");
+  };
 
   return (
     <div
