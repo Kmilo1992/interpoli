@@ -46,6 +46,12 @@ El **Concurso Nacional de Programación FEDESOFT** busca impulsar el talento jov
 --- 
 ## DERECHOS DE AUTOR
 
+DANE. (n.d.). Encuesta de Convivencia y Seguridad Ciudadana (ECSC). https://www.dane.gov.co/index.php/estadisticas-por-tema/seguridad-y-defensa/encuesta-de-convivencia-y-seguridad-ciudadana-ecsc
+
+De Comercio De Bogotá, C. (n.d.). Cámara de Comercio de Bogotá. https://www.ccb.org.co/de-interes/comunicados/en-descenso-percepcion-de-inseguridad-y-victimizacion-en-bogota
+
+Cisc. (s. f.). Estadística delictiva | Policía Nacional de Colombia. Policía Nacional de Colombia. https://www.policia.gov.co/estadistica-delictiva
+
 Todas las imágenes externas usadas, tales como las imágenes de las alertas, son imágenes stock
 
 Disparos: https://es.123rf.com/clipart-vectorizado/Pistola_1911
