@@ -43,6 +43,19 @@ Esta versión busca demostrar cómo la **tecnología, la programación y el trab
 El **Concurso Nacional de Programación FEDESOFT** busca impulsar el talento joven colombiano en áreas de programación y desarrollo de software.  
 **InterPOLI** representa al **Colegio Anglo Americano**, mostrando cómo, a través del aprendizaje colaborativo, la innovación y el pensamiento crítico, los estudiantes pueden crear soluciones reales a problemáticas sociales.
 
+--- 
+## DERECHOS DE AUTOR
+
+Todas las imágenes externas usadas, tales como las imágenes de las alertas, son imágenes stock
+
+Disparos: https://es.123rf.com/clipart-vectorizado/Pistola_1911
+Otro: https://pngtree.com/so/warning-sign
+Propiedades: https://www.istockphoto.com/es/ilustraciones/ventana-rota
+Robo: https://www.freepik.es/vector-premiumm/ladron-masculino-o-ladron-mascara-negra-entrando-casa-traves-ventana-ilustracion-vectorial-237914661.htm
+Vandalismo: https://ww.vectorstock.com/royalty-free-vector/teenage-vandalism-attack-vector-35490414
+Violencia: https://depositphotos.com/es/vector/choke-choking-fighter-icon-solid-style-461020134.html
+
+
 ---
 
 ## ⚙️ Tecnologías principales
