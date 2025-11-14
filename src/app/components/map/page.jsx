@@ -165,7 +165,7 @@ export default function Map() {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={12}
+        zoom={16}
         onLoad={handleMapLoad}
         options={{ styles: mapStyles, streetViewControl: false }}
       >
