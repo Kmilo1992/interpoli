@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../../../../service/firebase";
+import { doc, onSnapshot, getDoc } from "firebase/firestore";
+import { auth, db } from "../../../../service/firebase";
 import styles from "./page.module.css";
 import Link from "next/link";
 import AdminDetail from "../../../components/admin-detail/AdminDetail.jsx";
@@ -26,40 +26,63 @@ const AdminChange = () => {
   const [loading, setLoading] = useState(true);
   const [minLoading, setMinLoading] = useState(true);
   const router = useRouter();
-  const session = useMemo(() => getSession(), []);
+  const [sessionState, setSessionState] = useState(() => getSession());
 
   useEffect(() => {
     const timer = setTimeout(() => setMinLoading(false), 500);
-    const hasSession = document.cookie.includes("session=true");
-    if (!hasSession) {
-      router.push("/poliadmin");
-    }
+    let unsubscribe = null;
 
-    if (id) {
-      const docRef = doc(db, "alerts", id);
-      const unsub = onSnapshot(
-        docRef,
-        (snap) => {
-          if (snap.exists()) {
-            setAlert({ id: snap.id, ...snap.data() });
-          } else {
-            setAlert(null);
-          }
-          setLoading(false);
-        },
-        (err) => {
-          console.error("Error al leer detalle:", err);
-          setLoading(false);
+    const init = async () => {
+      const s = getSession();
+      if (s) {
+        setSessionState(s);
+      } else {
+        const u = auth?.currentUser || null;
+        if (!u) {
+          router.push("/poliadmin");
+          clearTimeout(timer);
+          return;
         }
-      );
-      return () => {
-        unsub();
-        clearTimeout(timer);
-      };
-    }
+        try {
+          const ref = doc(db, "users", u.uid);
+          const snap = await getDoc(ref);
+          const data = snap.exists() ? (snap.data() || {}) : {};
+          setSessionState({ uid: u.uid, username: u.email || "", isAdmin: data.isAdmin === true });
+        } catch (e) {
+          console.error("No se pudo obtener rol/sesión:", e);
+          router.push("/poliadmin");
+          clearTimeout(timer);
+          return;
+        }
+      }
 
-    return () => clearTimeout(timer);
-  }, [id]);
+      if (id) {
+        const docRef = doc(db, "alerts", id);
+        unsubscribe = onSnapshot(
+          docRef,
+          (snap) => {
+            if (snap.exists()) {
+              setAlert({ id: snap.id, ...snap.data() });
+            } else {
+              setAlert(null);
+            }
+            setLoading(false);
+          },
+          (err) => {
+            console.error("Error al leer detalle:", err);
+            setLoading(false);
+          }
+        );
+      }
+    };
+
+    init();
+
+    return () => {
+      if (typeof unsubscribe === "function") unsubscribe();
+      clearTimeout(timer);
+    };
+  }, [id, router]);
 
   if (!id) return <div style={{ padding: 16 }}>ID no especificado.</div>;
 
@@ -69,11 +92,12 @@ const AdminChange = () => {
 
   if (!alert) return <div style={{ padding: 16 }}>Alerta no encontrada.</div>;
 
-  const isOwner = session && alert && (
-    (alert.createdByUid && alert.createdByUid === session.uid) ||
-    (alert.createdByUsername && alert.createdByUsername === session.username)
+  const isOwner = sessionState && alert && (
+    (alert.createdByUid && alert.createdByUid === sessionState.uid) ||
+    (alert.createdByUsername && alert.createdByUsername === sessionState.username)
   );
-  const canEdit = (session?.isAdmin === true) || isOwner;
+  const canEdit = (sessionState?.isAdmin === true) || isOwner;
+  const canDelete = sessionState?.isAdmin === true;
 
   return (
     <div className={styles.detail_container}>
@@ -82,14 +106,6 @@ const AdminChange = () => {
           <LeftLine width={24} height={24} />
         </Link>
         <p>Regresar al listado de alertas</p>
-        {!isEdit && canEdit && (
-          <button
-            className={styles.edit_btn}
-            onClick={() => router.push(`/admin-detail/${id}?edit=1`)}
-          >
-            Editar
-          </button>
-        )}
       </div>
 
       {isEdit && canEdit ? (
@@ -97,9 +113,11 @@ const AdminChange = () => {
           alert={alert}
           onUpdate={(data) => updateAlertInFirestore(data)}
           onDelete={(id) => deleteAlertFromFirestore(id)}
+          canEdit={canEdit}
+          canDelete={canDelete}
         />
       ) : (
-        <AdminReadOnly alert={alert} />
+        <AdminReadOnly alert={alert} canEdit={canEdit} />
       )}
     </div>
   );

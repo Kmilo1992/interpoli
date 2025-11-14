@@ -4,13 +4,13 @@ import React, { useRef, useState, useEffect, useMemo } from "react";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import Admin from "../../components/admin/PanelAdmin.jsx";
-import { db } from "../../../service/firebase";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { auth, db } from "../../../service/firebase";
+import { collection, onSnapshot, query, orderBy, doc, getDoc } from "firebase/firestore";
 import Spinner from "../../components/spinner/Spinner";
 import { alertTypeOptions } from "../../data/alertType";
 import Image from "next/image";
 import filterIcon from "../../../assets/icons/filter_alerts.png";
-import { clearSession } from "../../../utils/session";
+import { getSession } from "../../../utils/session";
 
 const Adminlist = () => {
   const containerRef = useRef(null);
@@ -25,30 +25,56 @@ const Adminlist = () => {
 
 
   useEffect(() => {
-    const q = query(collection(db, "alerts"), orderBy("createdAt", "desc"));
-    const hasSession = document.cookie.includes("session=true");
-    if (!hasSession) {
-      router.push("/poliadmin");
-    }
-
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setAlerts(data);
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Error en tiempo real:", error);
-        setLoading(false);
+    let unsubscribe = null;
+    const init = async () => {
+      // Verificar sesión local; si no hay, caer a Firebase Auth
+      const s = getSession();
+      if (!s) {
+        const u = auth?.currentUser || null;
+        if (!u) {
+          router.push("/poliadmin");
+          return;
+        }
+        try {
+          const ref = doc(db, "users", u.uid);
+          const snap = await getDoc(ref);
+          const isAdmin = !!(snap.exists() && snap.data()?.isAdmin === true);
+          if (!isAdmin) {
+            router.push("/account");
+            return;
+          }
+        } catch (e) {
+          console.error("No se pudo verificar rol:", e);
+          router.push("/poliadmin");
+          return;
+        }
+      } else if (s?.isAdmin !== true) {
+        router.push("/account");
+        return;
       }
-    );
 
-    return () => unsubscribe();
-  }, []);
+      const q = query(collection(db, "alerts"), orderBy("createdAt", "desc"));
+      unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const data = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setAlerts(data);
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Error en tiempo real:", error);
+          setLoading(false);
+        }
+      );
+    };
+    init();
+    return () => {
+      if (typeof unsubscribe === "function") unsubscribe();
+    };
+  }, [router]);
 
   const toggleType = (value) => {
     setSelectedTypes((prev) =>
@@ -118,15 +144,7 @@ const Adminlist = () => {
     };
   }, [filtersOpen]);
 
-  const logout = () => {
-    try {
-      clearSession();
-    } catch {}
-    try {
-      document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-    } catch {}
-    router.push("/");
-  };
+  // Sin botón de cierre de sesión en la vista de admin
 
   return (
     <div
@@ -143,15 +161,6 @@ const Adminlist = () => {
         <>
           <div className={styles.topbar}>
             <div className={styles.topbar_actions}>
-             <div className="container">
-              <button 
-                type="button"
-                className={styles.logout_button}
-                onClick={logout}
-                >
-                Cerrar sesión
-              </button>
-            </div>
               {(selectedTypes.length > 0 || selectedLevels.length > 0) && (
                 <button
                   type="button"
