@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { alertImages } from "../../../utils/alertImages";
 
-const AdminReadOnly = ({ alert }) => {
+const AdminReadOnly = ({ alert, canEdit = false }) => {
   const router = useRouter();
 
   const imageSrc =
@@ -36,9 +36,11 @@ const AdminReadOnly = ({ alert }) => {
         <h1 className={styles.title}>
           {alert.category || "Alerta"}
         </h1>
-        <button className={styles.edit_button} onClick={goEdit}>
-          Editar
-        </button>
+        {canEdit && (
+          <button className={styles.edit_button} onClick={goEdit}>
+            Editar
+          </button>
+        )}
       </div>
 
       <div className={styles.detail_list}>
@@ -88,4 +90,3 @@ const AdminReadOnly = ({ alert }) => {
 };
 
 export default AdminReadOnly;
-

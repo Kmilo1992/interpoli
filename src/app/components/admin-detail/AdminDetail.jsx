@@ -8,10 +8,9 @@ import { alertTypeOptions, getDescriptionsForType } from "../../data/alertType";
 import { level as levelOptions } from "../../data/alertLevel";
 import { Toast } from "../../../utils/toast";
 import Swal from "sweetalert2";
-import { getSession } from "../../../utils/session";
 
 
-const AdminDetail = ({ alert, onUpdate, onDelete }) => {
+const AdminDetail = ({ alert, onUpdate, onDelete, canEdit = false, canDelete = false }) => {
   const [category, setCategory] = useState(alert.category || "");
   const [description, setDescription] = useState(alert.description || "");
   const [otherText, setOtherText] = useState("");
@@ -31,12 +30,6 @@ const AdminDetail = ({ alert, onUpdate, onDelete }) => {
   }, []);
 
   const handleSave = () => {
-    const session = getSession();
-    const isOwner = session && alert && (
-      (alert.createdByUid && alert.createdByUid === session.uid) ||
-      (alert.createdByUsername && alert.createdByUsername === session.username)
-    );
-    const canEdit = (session?.isAdmin === true) || isOwner;
     if (!canEdit) {
       Toast.fire({ icon: "error", title: "No tienes permisos para editar" });
       return;
@@ -79,8 +72,6 @@ const AdminDetail = ({ alert, onUpdate, onDelete }) => {
   };
 
 const handleDelete = () => {
-  const session = getSession();
-  const canDelete = session?.isAdmin === true; // solo admin
   if (!canDelete) {
     Toast.fire({ icon: "error", title: "Solo un admin puede eliminar" });
     return;
